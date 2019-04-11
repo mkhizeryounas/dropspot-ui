@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import AuthButton from "./auth/authButton.jsx";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -10,7 +9,6 @@ class Dashboard extends Component {
     return (
       <div>
         <h1>Dashboard</h1>
-        <AuthButton />
       </div>
     );
   }

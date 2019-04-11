@@ -6,6 +6,7 @@ import "bootstrap";
 
 // APP CONTEXT
 import AppProvider from "./contexts/app.context";
+import { AppContext } from "./contexts/app.context";
 
 // COMPONENTS
 import Navbar from "./components/navbar.jsx";
@@ -25,13 +26,23 @@ class App extends Component {
           <div>
             <Navbar />
             <div className="container mt-2 mb-4">
-              <Switch>
-                <Route path="/" exact component={Index} />
-                <Route path="/login" exact component={Login} />
-                <PrivateRoute path="/dashboard" exact component={Dashboard} />
-                {/* <Route path="/users/" component={Users} /> */}
-                <Route component={NotFound} />
-              </Switch>
+              <AppContext.Consumer>
+                {context => (
+                  <Switch>
+                    <Route path="/" exact component={Index} />
+                    {!context.state.isAuthenticated && (
+                      <Route path="/login" exact component={Login} />
+                    )}
+                    <PrivateRoute
+                      path="/dashboard"
+                      exact
+                      component={Dashboard}
+                    />
+                    {/* <Route path="/users/" component={Users} /> */}
+                    <Route component={NotFound} />
+                  </Switch>
+                )}
+              </AppContext.Consumer>
             </div>
           </div>
         </AppProvider>
