@@ -1,26 +1,40 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import authService from "../../services/auth.service";
+import AuthService from "../../services/auth.service";
 import { ValidatorForm } from "react-form-validator-core";
 import TextValidator from "../../components/textValidator.jsx";
+import { withAppContext } from "../../contexts/app.context";
 
 class Login extends Component {
   state = {
     username: "",
     password: ""
   };
+  constructor(props) {
+    super(props);
+    this.authService = new AuthService();
+  }
   componentDidMount() {
     window.document.title = "Login";
   }
-  handleLogin = () => {
-    authService.authenticate(() => this.setState({ redirectToReferrer: true }));
-  };
+  handleLogin = async () => {};
   handleChange = async e => {
     e.preventDefault();
     await this.setState({ [e.target.name]: e.target.value });
   };
-  handleSubmit = () => {
-    console.log("state", this.state);
+  handleSubmit = async () => {
+    try {
+      let user = await this.authService.authenticate({
+        username: this.state.username,
+        password: this.state.password
+      });
+      await this.props.context.actions.changeAuthStatus(true, user.data.data);
+      this.props.history.push("/dashboard");
+      // this.setState({ redirectToReferrer: true });
+    } catch (err) {
+      console.log("Err", err);
+    } finally {
+    }
   };
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
@@ -87,4 +101,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withAppContext(Login);

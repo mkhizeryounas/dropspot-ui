@@ -1,24 +1,36 @@
 import React, { Component } from "react";
 import { withContext } from "with-context";
 import { withRouter } from "react-router-dom";
+
+import { getUser } from "../services/auth.service";
+
 export const AppContext = React.createContext();
 export const withAppContext = withContext(AppContext);
 
 class AppProvider extends Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
-    isLoggedIn: "false",
-    counter: 0
+    isAuthenticated: false,
+    user: {}
   };
   componentDidMount() {
-    console.log(this.props);
+    let user = getUser();
+    if (user) this.setState({ user: user, isAuthenticated: true });
   }
-  increment = () => {
-    this.setState({ counter: this.state.counter + 1 });
+  changeAuthStatus = (status, user = {}) => {
+    this.setState({ isAuthenticated: status, user });
   };
   render() {
     return (
       <AppContext.Provider
-        value={{ state: this.state, actions: { increment: this.increment } }}
+        value={{
+          state: this.state,
+          actions: {
+            changeAuthStatus: this.changeAuthStatus
+          }
+        }}
       >
         {this.props.children}
       </AppContext.Provider>

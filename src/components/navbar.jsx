@@ -3,14 +3,25 @@ import { withRouter } from "react-router-dom";
 import NavElement from "./navElement";
 import { Link } from "react-router-dom";
 import { withAppContext } from "../contexts/app.context";
+import AuthService from "../services/auth.service";
+
 class Navbar extends Component {
   state = {};
+  constructor(prop) {
+    super(prop);
+    this.authService = new AuthService();
+  }
+  handleLogout() {
+    this.authService.signout();
+    this.props.context.actions.changeAuthStatus(false);
+    this.props.history.push("/");
+  }
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">
           <code>
-            <i className="fa fa-sitemap" /> shopcast
+            <i className="fa fa-rocket" /> dropspot
           </code>
         </Link>
         <button
@@ -26,41 +37,52 @@ class Navbar extends Component {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav mr-auto">
-            <li className="nav-item">
+          <ul className="navbar-nav ml-auto">
+            {/* <li className="nav-item">
               <NavElement name="Home" link="/" />
-            </li>
-            <li className="nav-item">
-              <NavElement name="Dashboard" link="/dashboard" />
-            </li>
-            <li className="nav-item">
-              <NavElement name="Not Found" link="/not-found" />
-            </li>
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
+            </li> */}
+            {this.props.context.state.isAuthenticated && (
+              <li className="nav-item">
+                <NavElement name="Dashboard" link="/dashboard" />
+              </li>
+            )}
+
+            {this.props.context.state.isAuthenticated && (
+              <li
+                style={{
+                  borderLeft: "1px solid #ccc"
+                  // border: "1px solid #ccc"
+                  // borderRadius: "4px"
+                }}
+                className="nav-item dropdown "
               >
-                Dropdown
-              </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a className="dropdown-item" href="#">
-                  Action
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <strong>
+                    {this.props.context.state.user.username.toUpperCase()}
+                  </strong>
                 </a>
-                <a className="dropdown-item" href="#">
-                  Another action
-                </a>
-                <div className="dropdown-divider" />
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a>
-              </div>
-            </li>
+                <div
+                  className="dropdown-menu dropdown-menu-right"
+                  aria-labelledby="navbarDropdown"
+                >
+                  <a
+                    className="dropdown-item  text-danger"
+                    href="javascript:void(0)"
+                    onClick={() => this.handleLogout()}
+                  >
+                    Sign out
+                  </a>
+                </div>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
