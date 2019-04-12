@@ -10,32 +10,44 @@ import { toast } from "react-toastify";
 class Login extends Component {
   state = {
     username: "",
-    password: ""
+    password: "",
+    github_personal_token: ""
   };
   constructor(props) {
     super(props);
     this.authService = new AuthService();
   }
   componentDidMount() {
-    window.document.title = "Login";
+    window.document.title = "Signup";
   }
+  handleLogin = async () => {};
   handleChange = async e => {
     e.preventDefault();
     await this.setState({ [e.target.name]: e.target.value });
   };
   handleSubmit = async () => {
     try {
-      let user = await this.authService.authenticate({
+      let github_check = await this.authService.github_token_check(
+        this.state.github_personal_token
+      );
+      console.log("github_check", github_check);
+      let user = await this.authService.signup({
         username: this.state.username,
-        password: this.state.password
+        password: this.state.password,
+        github_personal_token: this.state.github_personal_token
       });
-      await this.props.context.actions.changeAuthStatus(true, user.data.data);
-      toast.success("Login Successful");
-      this.props.history.push("/dashboard");
+      // await this.props.context.actions.changeAuthStatus(true, user.data.data);
+      toast.success("Account Signup Successful");
+      this.props.history.push("/login");
       // this.setState({ redirectToReferrer: true });
     } catch (err) {
-      toast.error("Login Failed");
-      console.log("Err", err);
+      console.log("Err", err.response);
+      if (err.response.status === 409) {
+        return toast.error("An account already exists with this username");
+      } else if (err.response.status === 401) {
+        return toast.error("Invalid GitHub personal token");
+      }
+      return toast.error(err.response.data.message);
     } finally {
     }
   };
@@ -50,7 +62,7 @@ class Login extends Component {
           <div className="col-sm-3" />
           <div className="col-sm-6">
             <div className="card mt-4">
-              <div className="card-header">Login</div>
+              <div className="card-header">Signup</div>
               <ValidatorForm
                 ref="form"
                 onSubmit={() => this.handleSubmit()}
@@ -82,15 +94,28 @@ class Login extends Component {
                     errorMessages={["This field is required"]}
                   />
                 </div>
+                <div className="form-group">
+                  <label htmlFor="username">GitHub Personal Token</label>
+                  <TextValidator
+                    type="password"
+                    className="form-control"
+                    placeholder="Github personal token"
+                    name="github_personal_token"
+                    value={this.state.github_personal_token}
+                    onChange={e => this.handleChange(e)}
+                    validators={["required"]}
+                    errorMessages={["This field is required"]}
+                  />
+                </div>
                 <div className="row">
                   <div className="col">
-                    <Link to="/signup">
-                      <small>Sign up for new account</small>
+                    <Link to="/login">
+                      <small>Already have an account?</small>
                     </Link>
                   </div>
                   <div className="col-auto">
                     <button type="submit" className="btn btn-success">
-                      <i className="fa fa-sign-in" /> Login
+                      <i className="fa fa-sign-in" /> Signup
                     </button>
                   </div>
                 </div>

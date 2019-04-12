@@ -1,4 +1,5 @@
 import http from "./axios";
+import axios from "axios";
 
 export function getUser() {
   try {
@@ -34,6 +35,20 @@ class AuthService {
   async authenticate(creds) {
     let user = await http.post("/users/signin", creds);
     window.localStorage["user"] = JSON.stringify(user.data.data);
+    return user;
+  }
+
+  async signup(creds) {
+    let user = await http.post("/users/signup", creds);
+    return user;
+  }
+
+  async github_token_check(creds) {
+    let user = await axios.get("https://api.github.com/user", {
+      headers: {
+        Authorization: `token ${creds}`
+      }
+    });
     return user;
   }
 }

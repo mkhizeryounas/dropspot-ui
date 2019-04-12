@@ -20,9 +20,9 @@ class Navbar extends Component {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">
-          <code>
-            <i className="fa fa-rocket" /> dropspot
-          </code>
+          <tt>
+            <i className="fa fa-cubes" /> <big>DROPSPOT</big>
+          </tt>
         </Link>
         <button
           className="navbar-toggler"

@@ -12,7 +12,6 @@ if (user) {
 
 const instance = axios.create({
   baseURL: base_url,
-  timeout: 10000,
   headers
 });
 

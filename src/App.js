@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 // APP CONTEXT
 import AppProvider from "./contexts/app.context";
@@ -16,13 +19,17 @@ import PrivateRoute from "./components/privateRoute.jsx";
 import Index from "./pages/index.jsx";
 import NotFound from "./pages/notFound.jsx";
 import Login from "./pages/auth/login.jsx";
+import Signup from "./pages/auth/signup";
 import Dashboard from "./pages/dashboard.jsx";
+import NewProject from "./pages/projects/new.jsx";
+import SingleProject from "./pages/projects/single.jsx";
 
 class App extends Component {
   render() {
     return (
       <Router>
         <AppProvider>
+          <ToastContainer />
           <div>
             <Navbar />
             <div className="container mt-2 mb-4">
@@ -33,11 +40,24 @@ class App extends Component {
                     {!context.state.isAuthenticated && (
                       <Route path="/login" exact component={Login} />
                     )}
+                    {!context.state.isAuthenticated && (
+                      <Route path="/signup" exact component={Signup} />
+                    )}
                     <PrivateRoute
                       path="/dashboard"
                       exact
                       component={Dashboard}
                     />
+                    <PrivateRoute
+                      path="/projects/new"
+                      exact
+                      component={NewProject}
+                    />
+                    <PrivateRoute
+                      path="/projects/:id/view"
+                      component={SingleProject}
+                    />
+
                     {/* <Route path="/users/" component={Users} /> */}
                     <Route component={NotFound} />
                   </Switch>
