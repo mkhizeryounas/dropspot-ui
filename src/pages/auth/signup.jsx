@@ -18,7 +18,7 @@ class Login extends Component {
     this.authService = new AuthService();
   }
   componentDidMount() {
-    window.document.title = "Login";
+    window.document.title = "Signup";
   }
   handleLogin = async () => {};
   handleChange = async e => {
