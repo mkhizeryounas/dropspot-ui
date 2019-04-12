@@ -25,10 +25,12 @@ class Index extends Component {
             </p>
             <div className="row">
               <div className="col-auto">
-                <button className="btn btn-primary">Sign up</button>
+                <Link to="/signup" className="btn btn-primary">
+                  Sign up
+                </Link>
               </div>
               <div className="col-auto">
-                <Link to="login" className="btn btn-outline-success">
+                <Link to="/login" className="btn btn-outline-success">
                   Sign in
                 </Link>
               </div>
