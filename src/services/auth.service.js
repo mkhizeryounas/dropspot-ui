@@ -35,11 +35,13 @@ class AuthService {
   async authenticate(creds) {
     let user = await http.post("/users/signin", creds);
     window.localStorage["user"] = JSON.stringify(user.data.data);
+    this.isAuthenticated = true;
     return user;
   }
 
   async signup(creds) {
     let user = await http.post("/users/signup", creds);
+    this.isAuthenticated = false;
     return user;
   }
 
