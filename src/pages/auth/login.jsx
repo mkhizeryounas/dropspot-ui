@@ -31,8 +31,8 @@ class Login extends Component {
       });
       await this.props.context.actions.changeAuthStatus(true, user.data.data);
       toast.success("Login Successful");
-      // this.props.history.push("/dashboard");
-      window.location = "/dashboard";
+      this.props.history.push("/dashboard");
+//       window.location = "/dashboard";
       // this.setState({ redirectToReferrer: true });
     } catch (err) {
       toast.error("Login Failed");
